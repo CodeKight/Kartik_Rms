@@ -4,6 +4,7 @@ from django.contrib.auth import get_user_model
 # Create your models here.
 
 User = get_user_model()
+
 class Category(models.Model):  
     name=models.CharField(max_length=100)
     
@@ -14,7 +15,7 @@ class Food(models.Model):
     category=models.ForeignKey(Category, on_delete=models.SET_NULL, null=True, blank=True) # CASCADE, SET_NULL, PROTECT
     
 class Table(models.Model):
-    number=models.CharField(max_length=1)  #'8', 'A'
+    number=models.CharField(max_length=100)  #'8', 'A'
     capacity=models.IntegerField()
     available=models.BooleanField(default=False)
     

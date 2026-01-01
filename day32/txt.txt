@@ -1,0 +1,7 @@
+#Postgres
+
+pip install psychopg2
+
+python -m pip install psycopg2-binary
+
+mockaroo
