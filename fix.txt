@@ -1,0 +1,7 @@
+#When unique key constraints occurs: 
+
+SELECT setval(pg_get_serial_sequence('"RMS_category"', 'id'), (SELECT MAX(id) FROM "RMS_category"));
+SELECT setval(pg_get_serial_sequence('"RMS_food"', 'id'), (SELECT MAX(id) FROM "RMS_food"));
+SELECT setval(pg_get_serial_sequence('"RMS_table"', 'id'), (SELECT MAX(id) FROM "RMS_table"));
+SELECT setval(pg_get_serial_sequence('"RMS_order"', 'id'), (SELECT MAX(id) FROM "RMS_order"));
+SELECT setval(pg_get_serial_sequence('"RMS_orderitems"', 'id'), (SELECT MAX(id) FROM "RMS_orderitems"));
