@@ -1,0 +1,11 @@
+#Methods of creating API: 
+
+function based api 
+class based 
+generics based
+viewset based 
+
+
+
+
+ 
