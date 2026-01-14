@@ -11,3 +11,11 @@ class CategorySerializer(serializers.Serializer):
      #Or, Category.objects.create(**validated_data) #Taking all data form the qwargs 
      return category
  
+ #to update
+ def update(self, instance, validated_data):
+     instance.name=validated_data.get('name', instance.name)
+     return instance
+ 
+ 
+     
+ 
