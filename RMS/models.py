@@ -14,7 +14,7 @@ class Food(models.Model):
     name=models.CharField(max_length=100)
     description= models.TextField()
     price=models.IntegerField()
-    category=models.ForeignKey(Category, on_delete=models.SET_NULL, null=True, blank=True) # CASCADE, SET_NULL, PROTECT
+    category=models.ForeignKey(Category, on_delete=models.PROTECT) # on_delete=models.SET_NULL, null=True, blank=True
     def __str__(self):
       return self.name
     
@@ -46,8 +46,8 @@ class Order(models.Model):
     
     
 class OrderItems(models.Model):
-    order=models.ForeignKey(Order, on_delete=models.CASCADE)
-    food=models.ForeignKey(Food, on_delete=models.CASCADE)
+    order=models.ForeignKey(Order, on_delete=models.PROTECT)
+    food=models.ForeignKey(Food, on_delete=models.PROTECT)
     
     
     
