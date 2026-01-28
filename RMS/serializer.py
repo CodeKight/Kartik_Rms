@@ -18,7 +18,7 @@ class CategorySerializer(serializers.ModelSerializer):
 
 
 
-#NORMAL SERIALIZATION 
+# # NORMAL SERIALIZATION: 
 
 # class CategorySerializer(serializers.Serializer):
 #  name = serializers.CharField(max_length=20)
