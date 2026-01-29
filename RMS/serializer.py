@@ -10,6 +10,30 @@ class CategorySerializer(serializers.ModelSerializer):
         fields='__all__'
         #fields=['id', 'name']
         #exclude=['name']
+    
+    # using save method to avoid duplicate data entry 
+    def save(self, **kwargs):
+        validated_data = self.validated_data
+        category = Category.objects.filter(name = validated_data.get('name')).count()
+        if category > 0:
+          raise serializers.ValidationError({"datail":"This category already exists."})
+        return super().save(**kwargs)
+    
+    # # overwriting the existing create and update to prevent duplicate data entry 
+    
+    # def create(self, validated_data):
+    #    category = Category.objects.filter(name = validated_data.get('name')).count()
+    #    if category > 0:
+    #       raise serializers.ValidationError({"datail":"This category already exists."})
+    #    #category.save()
+    #    return super().create(validated_data)
+   
+    # def update(self, instance, validated_data):
+    #    category = Category.objects.filter(name = validated_data.get('name')).count()
+    #    if category > 0:
+    #      raise serializers.ValidationError({"datail":"This category already exists."})
+    #    #category.save()
+    #    return super().update(instance, validated_data)
         
     
 

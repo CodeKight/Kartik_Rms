@@ -10,21 +10,18 @@ from rest_framework import mixins
 #from rest_framework import generics
 from rest_framework.generics import ListAPIView, CreateAPIView, ListCreateAPIView, RetrieveUpdateDestroyAPIView, RetrieveAPIView, DestroyAPIView, UpdateAPIView
 
-# Create your views here.
+from rest_framework import viewsets
 
 
-class CategoryAPIView(ListCreateAPIView):  #Using the combined form from generics 
-#class CategoryAPIView( CreateAPIView, ListAPIView):
+# Create your views here.--------------------------------------------------------------------------------------
+
+
+# MODEL VIEWSETS: 
+class CategoryModelViewSet(viewsets.ModelViewSet):
    queryset = Category.objects.all()
    serializer_class = CategorySerializer
    
-class CategoryDetailAPIView(RetrieveUpdateDestroyAPIView):  #Using the combined form form generics
-#class CategoryDetailAPIView(RetrieveAPIView, DestroyAPIView, UpdateAPIView):
-   queryset = Category.objects.all()
-   serializer_class = CategorySerializer
-   #lookup_field = 'name'
-   
-   def delete(self, request, *args, **kwargs): #or destroy, both can be used
+   def destroy(self, request, pk):
       category = self.get_object()   #it gets objects and filter using lookup fields from url <id> 
       items = OrderItems.objects.filter(food__category = category).count()
       if items>0:
@@ -32,6 +29,7 @@ class CategoryDetailAPIView(RetrieveUpdateDestroyAPIView):  #Using the combined 
       category.delete()
       return Response({"datail":"data has been deleted"}, status=status.HTTP_204_NO_CONTENT)  
    
+      
 
 
 
@@ -40,7 +38,57 @@ class CategoryDetailAPIView(RetrieveUpdateDestroyAPIView):  #Using the combined 
 
 
 
-# #GENERICS API: 
+
+# #VIEW SETS: 
+
+# class CategoryViewSet(viewsets.ViewSet):
+#    def list(self, request):
+#       category = Category.objects.all()
+#       serializer = CategorySerializer(category, many=True)
+#       return Response(serializer.data)
+   
+#    def create(self, request):
+#       serializer = CategorySerializer(data = request.data)
+#       serializer.is_valid(raise_exception = True)
+#       serializer.save()
+#       return Response({"detail":"New data created", "data": serializer.data}, status = status.HTTP_201_CREATED)
+   
+# class CategoryDetailViewset(viewsets.ViewSet):
+#    def retrieve(self, request, pk):
+#       category = Category.objects.get(pk=pk)
+#       serializer = CategorySerializer(category)
+#       return Response(serializer.data)
+   
+
+
+
+
+
+
+# # GENERIC WITH MIXINS:---------------------------------------------------------------------------------
+# class CategoryAPIView(ListCreateAPIView):  #Using the combined form from generics 
+# #class CategoryAPIView( CreateAPIView, ListAPIView):
+#    queryset = Category.objects.all()
+#    serializer_class = CategorySerializer
+   
+# class CategoryDetailAPIView(RetrieveUpdateDestroyAPIView):  #Using the combined form form generics
+# #class CategoryDetailAPIView(RetrieveAPIView, DestroyAPIView, UpdateAPIView):
+#    queryset = Category.objects.all()
+#    serializer_class = CategorySerializer
+#    #lookup_field = 'name'
+   
+#    def delete(self, request, *args, **kwargs): #or destroy, both can be used
+#       category = self.get_object()   #it gets objects and filter using lookup fields from url <id> 
+#       items = OrderItems.objects.filter(food__category = category).count()
+#       if items>0:
+#          return Response({"datail":"Protected: Category cannot be deleted. Related to OrderItems. "})
+#       category.delete()
+#       return Response({"datail":"data has been deleted"}, status=status.HTTP_204_NO_CONTENT)  
+   
+
+
+
+# #GENERICS API VIEW: 
 # class CategoryAPIView(generics.GenericAPIView):
 #    queryset = Category.objects
 #    serializer_class = CategorySerializer
