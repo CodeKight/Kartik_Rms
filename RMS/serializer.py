@@ -1,9 +1,37 @@
 from rest_framework import serializers 
-from .models import Category
+from .models import Category, Food
 
 
-# SERIALIZATION USING MODEL SERIALIZER:
+#Food Serializer: 
 
+class FoodSerializer(serializers.ModelSerializer):
+    price_with_tax = serializers.SerializerMethodField()
+    category = serializers.StringRelatedField()
+    class Meta: 
+        model = Food 
+        fields = ['id', 'name', 'description', 'price', 'price_with_tax', 'category']
+        
+    def get_price_with_tax(self, food:Food):
+        return food.price*0.13 + food.price
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+# SERIALIZATION USING MODEL SERIALIZER:----------------------------------
 class CategorySerializer(serializers.ModelSerializer):
     class Meta:
         model = Category
@@ -18,6 +46,8 @@ class CategorySerializer(serializers.ModelSerializer):
         if category > 0:
           raise serializers.ValidationError({"datail":"This category already exists."})
         return super().save(**kwargs)
+    
+    
     
     # # overwriting the existing create and update to prevent duplicate data entry 
     
@@ -42,7 +72,7 @@ class CategorySerializer(serializers.ModelSerializer):
 
 
 
-# # NORMAL SERIALIZATION: 
+# # NORMAL SERIALIZATION: -----------------------------------------
 
 # class CategorySerializer(serializers.Serializer):
 #  name = serializers.CharField(max_length=20)
