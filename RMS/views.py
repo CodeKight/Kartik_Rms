@@ -12,14 +12,32 @@ from rest_framework.generics import ListAPIView, CreateAPIView, ListCreateAPIVie
 
 from rest_framework import viewsets
 
+from rest_framework.pagination import PageNumberPagination
+from rest_framework import filters 
+from django_filters.rest_framework import DjangoFilterBackend
+
+from .filters import FoodFilter
+
 
 # Create your views here.--------------------------------------------------------------------------------------
 
-
+class CategoryPagination(PageNumberPagination):  #Pagination class for Category 
+   page_size = 10
+   page_size_query_param = 'page_size'
+   max_page_size = 1000
+   
+   
 # MODEL VIEWSETS: 
 class CategoryViewset(viewsets.ModelViewSet):
    queryset = Category.objects.all()
    serializer_class = CategorySerializer
+   pagination_class = CategoryPagination
+   
+   #filtering: 
+   filter_backends = [filters.SearchFilter]
+   search_fields = ['name']
+   
+   
    
    def destroy(self, request, pk):
       category = self.get_object()   #it gets objects and filter using lookup fields from url <id> 
@@ -29,12 +47,33 @@ class CategoryViewset(viewsets.ModelViewSet):
       category.delete()
       return Response({"datail":"data has been deleted"}, status=status.HTTP_204_NO_CONTENT)  
    
+
       
+
+class FoodPagination(PageNumberPagination):  #Pagination class for Food 
+    page_size = 100
+    page_size_query_param = 'page_size'
+    max_page_size = 10000
+
 
 class FoodViewset(viewsets.ModelViewSet):
  
-   queryset = Food.objects.all()
+   queryset = Food.objects.select_related('category').all()
    serializer_class = FoodSerializer
+   
+   #pagination: 
+   pagination_class = FoodPagination 
+   
+   # Using search and django filter: 
+   filter_backends = [filters.SearchFilter, DjangoFilterBackend, filters.OrderingFilter]  #all three's class are imported and included 
+   search_fields = ['name','category__name']  #search filter 
+   filterset_fields = ['category']            #django filter 
+   ordering_fields = ['name','price']         #order filter
+   filterset_class = FoodFilter               #external filter.py, less than greater than feature. 
+  
+   
+   
+   
 
 
 
