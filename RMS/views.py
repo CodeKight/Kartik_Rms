@@ -18,6 +18,8 @@ from django_filters.rest_framework import DjangoFilterBackend
 
 from .filters import FoodFilter
 
+from rest_framework.permissions import IsAuthenticated, AllowAny, IsAuthenticatedOrReadOnly
+
 
 # Create your views here.--------------------------------------------------------------------------------------
 
@@ -36,6 +38,9 @@ class CategoryViewset(viewsets.ModelViewSet):
    #filtering: 
    filter_backends = [filters.SearchFilter]
    search_fields = ['name']
+   
+   #permissions: 
+   permission_classes  = [IsAuthenticatedOrReadOnly]
    
    
    
