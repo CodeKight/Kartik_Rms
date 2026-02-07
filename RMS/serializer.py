@@ -1,12 +1,12 @@
 from rest_framework import serializers 
-from .models import Category, Food
+from .models import Category, Food, Order, OrderItems
 
 
 #Food Serializer: 
 
 class FoodSerializer(serializers.ModelSerializer):
     price_with_tax = serializers.SerializerMethodField()
-    category = serializers.StringRelatedField()
+    #category = serializers.StringRelatedField()
     class Meta: 
         model = Food 
         fields = ['id', 'name', 'description', 'price', 'price_with_tax', 'category']
@@ -14,6 +14,20 @@ class FoodSerializer(serializers.ModelSerializer):
     def get_price_with_tax(self, food:Food):
         return food.price*0.13 + food.price
 
+#orderitem serializer: 
+
+class OrderItemsSerializer(serializers.ModelSerializer):
+    class Meta: 
+        model = OrderItems
+        fields = '__all__'
+
+#order serializer:
+class OrderSerializer(serializers.ModelSerializer):
+    user = serializers.HiddenField(default = serializers.CurrentUserDefault())
+    items = OrderItemsSerializer
+    class Meta:
+        model = Order 
+        fields = ["user", "table", "total_price", "status", "payment_status", "items"]
 
 
 

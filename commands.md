@@ -64,3 +64,18 @@ pip install -r requirements.txt
 
 # to uninstall all packages listed in requirements.txt
 pip uninstall -r requirements.txt
+
+
+
+# install api documentation: 
+$ pip install drf-spectacular
+
+# to create the backup of the data: 
+
+py manage.py dumpdata > backup.json    #backup the data 
+py manage.py loaddata backup.json    #load the backuped data
+
+export PGOPTIONS="-c statement_timeout=0"
+export DJANGO_USE_PGBOUNCER=true
+
+ py manage.py dumpdata RMS --indent 2 --output=real_backup.json

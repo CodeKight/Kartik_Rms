@@ -1,8 +1,8 @@
 from django.shortcuts import render
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
-from.models import Category, OrderItems, Food
-from .serializer import CategorySerializer, FoodSerializer
+from.models import Category, OrderItems, Food, Order
+from .serializer import CategorySerializer, FoodSerializer, OrderSerializer
 from rest_framework import status 
 
 #from rest_framework.views import APIView
@@ -19,6 +19,8 @@ from django_filters.rest_framework import DjangoFilterBackend
 from .filters import FoodFilter
 
 from rest_framework.permissions import IsAuthenticated, AllowAny, IsAuthenticatedOrReadOnly
+
+from drf_spectacular.utils import extend_schema, OpenApiParameter, OpenApiExample
 
 
 # Create your views here.--------------------------------------------------------------------------------------
@@ -43,7 +45,7 @@ class CategoryViewset(viewsets.ModelViewSet):
    permission_classes  = [IsAuthenticatedOrReadOnly]
    
    
-   
+   #modified destroy method: 
    def destroy(self, request, pk):
       category = self.get_object()   #it gets objects and filter using lookup fields from url <id> 
       items = OrderItems.objects.filter(food__category = category).count()
@@ -51,6 +53,20 @@ class CategoryViewset(viewsets.ModelViewSet):
          return Response({"datail":"Protected: Category cannot be deleted. Related to OrderItems. "})
       category.delete()
       return Response({"datail":"data has been deleted"}, status=status.HTTP_204_NO_CONTENT)  
+   
+   
+   #extend schema method to add fields externally for api documentation:   
+   @extend_schema(
+      parameters = [
+         OpenApiParameter(name='name', description='Name of the body', required=False, type=str),
+      ],
+      filters = False,  #to not let filter and backend filter to show in the parameter of api documentaiton
+      description='This is GET food api',
+   )
+   def list(self, request):
+   # your non-standard behaviour
+     return super().list(request)
+
    
 
       
@@ -76,7 +92,29 @@ class FoodViewset(viewsets.ModelViewSet):
    ordering_fields = ['name','price']         #order filter
    filterset_class = FoodFilter               #external filter.py, less than greater than feature. 
   
+   #permission, authentication: 
+   permission_classes  = [IsAuthenticatedOrReadOnly]
    
+   #extending schema to add extra fields for api documentation:
+   @extend_schema(
+      parameters = [
+         OpenApiParameter(name='description', description='Name of the body', required=False, type=str),
+      ],
+      description='This is GET food api',
+   )
+   def list(self, request):
+   # your non-standard behaviour
+     return super().list(request)
+  
+  
+  #order api: 
+  
+class OrderViewset(viewsets.ModelViewSet):
+     queryset = Order.objects.prefetch_related('items').all()
+     serializer_class = OrderSerializer
+     permission_class = [IsAuthenticatedOrReadOnly]
+     permission_class = PageNumberPagination
+
    
    
 

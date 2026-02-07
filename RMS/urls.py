@@ -3,14 +3,15 @@ from django.urls import path
 #from .views import  CategoryList, CategoryDetails # category_list, category_detail,
 #from .views import CategoryAPIView, CategoryDetailAPIView
 #from .views import CategoryViewSet, CategoryDetailViewset, CategoryModelViewSet
-from .views import CategoryViewset, FoodViewset
+from .views import CategoryViewset, FoodViewset, OrderViewset
 from rest_framework import routers
 
 #for routers
 router = routers.DefaultRouter() #you  can use SimpleRouter() also instead of DefaultRouter()
 #router = routers.DefaultRouter() #shows the links of routes
-router.register('category', CategoryViewset, basename='mycategory')
-router.register('food', FoodViewset, basename = 'myfood')
+router.register('category', CategoryViewset, basename='category')
+router.register('food', FoodViewset, basename = 'food')
+router.register('order', OrderViewset, basename = 'order')
 
 urlpatterns = [
     
