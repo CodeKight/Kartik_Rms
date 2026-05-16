@@ -176,3 +176,9 @@ pyrightconfig.json
 # End of https://www.toptal.com/developers/gitignore/api/python
 
 env/
+
+day30/
+day31/
+day32/
+day33/
+day34/
